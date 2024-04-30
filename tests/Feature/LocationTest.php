@@ -2,13 +2,12 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Location;
 use Tests\TestCase;
 
 class LocationTest extends TestCase
 {
-  public function test_create_location_returns_a_successful_response(): void
+  public function test_post_location_returns_a_successful_response(): void
   {
     $array = [
       'name' => "Shopping Mall",
@@ -23,7 +22,7 @@ class LocationTest extends TestCase
     $response->assertJson($array);
   }
 
-  public function test_create_location_returns_a_failed_response(): void
+  public function test_post_location_returns_a_failed_response(): void
   {
     $array = [
       'name' => "Shopping Mall",
@@ -37,7 +36,7 @@ class LocationTest extends TestCase
     $response->assertJson(['city' => ["The city field is required."]]);
   }
 
-  public function test_update_location_returns_a_successful_response(): void
+  public function test_put_location_returns_a_successful_response(): void
   {
     $arrayPost = [
       'name' => "Shopping Mall",
@@ -63,7 +62,7 @@ class LocationTest extends TestCase
     $responsePut->assertJson($arrayPut);
   }
 
-  public function test_update_location_with_invalid_data_returns_a_failed_response(): void
+  public function test_put_location_with_invalid_data_returns_a_failed_response(): void
   {
     $arrayPost = [
       'name' => "Shopping Mall",
@@ -89,7 +88,7 @@ class LocationTest extends TestCase
     $responsePut->assertJson(['city' => ["The city field is required."]]);
   }
 
-  public function test_update_location_with_invalid_id_returns_a_failed_response(): void
+  public function test_put_location_with_invalid_id_returns_a_failed_response(): void
   {
     $arrayPut = [
       'name' => "Shopping Mall Update",
@@ -99,6 +98,33 @@ class LocationTest extends TestCase
     ];
 
     $responsePut = $this->put('/api/locations/0', $arrayPut);
+
+    $responsePut->assertStatus(404);
+    $responsePut->assertJson(['error' => "invalid id"]);
+  }
+
+  public function test_get_location_returns_a_successful_response(): void
+  {
+    $array = [
+      'name' => "Shopping Mall",
+      'slug' => "shopping-mall",
+      'city' => "Lages",
+      'state' => "Santa Catarina",
+    ];
+
+    $location = new Location();
+    $location->fill($array);
+    $location->save();
+
+    $response = $this->get('/api/locations/' . $location->id);
+
+    $response->assertStatus(200);
+    $response->assertJson($array);
+  }
+
+  public function test_get_location_with_invalid_id_returns_a_failed_response(): void
+  {
+    $responsePut = $this->get('/api/locations/0');
 
     $responsePut->assertStatus(404);
     $responsePut->assertJson(['error' => "invalid id"]);

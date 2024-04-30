@@ -40,4 +40,16 @@ class LocationController extends BaseController
     return response()->json($response);
   }
 
+  // get a resource in storage by it's id.
+  public function show(int $id)
+  {
+    try {
+    $response = $this->locationService->show($id);
+    } catch (ModelNotFoundException $e) {
+      return response()->json(["error" => "invalid id"], 404);
+    }
+
+    return response()->json($response);
+  }
+
 }

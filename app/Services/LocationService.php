@@ -25,4 +25,11 @@ class LocationService
 
     return $location;
   }
+
+  // get a resource in storage by it's id.
+  public function show(int $id)
+  {
+    return Location::findOrFail($id);
+  }
+
 }
