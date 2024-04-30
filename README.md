@@ -26,8 +26,8 @@ This is a simple API built to manage locations using Laravel.
    ```bash
    docker-compose up -d
    ```
-
-4. Wait for the Laravel app container to finish installing dependencies (you can monitor the progress in the container logs):
+   
+4. Wait for the laravelapp container to finish running `composer install`(you can monitor the progress in the container logs):
 
    ```bash
    docker-compose logs -f laravelapp
