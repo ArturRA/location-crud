@@ -32,4 +32,15 @@ class LocationService
     return Location::findOrFail($id);
   }
 
+  // get all resource in storage or filter by it's name if the name is given.
+  public function index(array $validatedData)
+  {
+    $query = Location::query();
+
+    if (isset($validatedData['name'])) {
+      $query->where('name', 'like', "%" . $validatedData['name'] . "%");
+    }
+
+    return $query->get();
+  }
 }

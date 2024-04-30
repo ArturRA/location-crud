@@ -129,4 +129,130 @@ class LocationTest extends TestCase
     $responsePut->assertStatus(404);
     $responsePut->assertJson(['error' => "invalid id"]);
   }
+
+  public function test_list_location_without_filter(): void
+  {
+    $arrayPost1 = [
+      'name' => "Shopping Mall",
+      'slug' => "shopping-mall",
+      'city' => "Lages",
+      'state' => "Santa Catarina",
+    ];
+
+    $location1 = new Location();
+    $location1->fill($arrayPost1);
+    $location1->save();
+
+    $arrayPost2 = [
+      'name' => "Shopping Mall 2",
+      'slug' => "shopping-mall-2",
+      'city' => "Curitiba",
+      'state' => "Parana",
+    ];
+
+    $location2 = new Location();
+    $location2->fill($arrayPost2);
+    $location2->save();
+
+    $arrayAssert1 = [
+      'id' => $location1->id,
+      'name' => $arrayPost1['name'],
+      'slug' => $arrayPost1['slug'],
+      'city' => $arrayPost1['city'],
+      'state' => $arrayPost1['state'],
+      'created_at' => $location1->created_at,
+      'updated_at' => $location1->updated_at,
+    ];
+
+    $arrayAssert2 = [
+      'id' => $location2->id,
+      'name' => $arrayPost2['name'],
+      'slug' => $arrayPost2['slug'],
+      'city' => $arrayPost2['city'],
+      'state' => $arrayPost2['state'],
+      'created_at' => $location2->created_at,
+      'updated_at' => $location2->updated_at,
+    ];
+
+    $response = $this->get('/api/locations/');
+
+    $response->assertStatus(200);
+
+    $response->assertJsonFragment($arrayAssert1);
+    $response->assertJsonFragment($arrayAssert2);
+  }
+
+  public function test_list_location_with_name_filter(): void
+  {
+    $arrayPost1 = [
+      'name' => "Shopping Mall",
+      'slug' => "shopping-mall",
+      'city' => "Lages",
+      'state' => "Santa Catarina",
+    ];
+
+    $location1 = new Location();
+    $location1->fill($arrayPost1);
+    $location1->save();
+
+    $arrayPost2 = [
+      'name' => "Shopping Mall 2",
+      'slug' => "shopping-mall-2",
+      'city' => "Curitiba",
+      'state' => "Parana",
+    ];
+
+    $location2 = new Location();
+    $location2->fill($arrayPost2);
+    $location2->save();
+
+    $arrayPost3 = [
+      'name' => "Golf Club",
+      'slug' => "golf-club",
+      'city' => "Curitiba",
+      'state' => "Parana",
+    ];
+
+    $location3 = new Location();
+    $location3->fill($arrayPost3);
+    $location3->save();
+
+    $arrayAssert1 = [
+      'id' => $location1->id,
+      'name' => $arrayPost1['name'],
+      'slug' => $arrayPost1['slug'],
+      'city' => $arrayPost1['city'],
+      'state' => $arrayPost1['state'],
+      'created_at' => $location1->created_at,
+      'updated_at' => $location1->updated_at,
+    ];
+
+    $arrayAssert2 = [
+      'id' => $location2->id,
+      'name' => $arrayPost2['name'],
+      'slug' => $arrayPost2['slug'],
+      'city' => $arrayPost2['city'],
+      'state' => $arrayPost2['state'],
+      'created_at' => $location2->created_at,
+      'updated_at' => $location2->updated_at,
+    ];
+
+    $arrayAssert3 = [
+      'id' => $location3->id,
+      'name' => $arrayPost3['name'],
+      'slug' => $arrayPost3['slug'],
+      'city' => $arrayPost3['city'],
+      'state' => $arrayPost3['state'],
+      'created_at' => $location3->created_at,
+      'updated_at' => $location3->updated_at,
+    ];
+
+    $response = $this->get('/api/locations?name=Mall');
+
+    $response->assertStatus(200);
+
+    $response->assertJsonFragment($arrayAssert1);
+    $response->assertJsonFragment($arrayAssert2);
+    $response->assertJsonMissingExact($arrayAssert3);
+  }
 }

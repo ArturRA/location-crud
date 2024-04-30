@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LocationIndexRequest;
 use App\Http\Requests\LocationRequest;
 use App\Services\LocationService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -44,7 +45,7 @@ class LocationController extends BaseController
   public function show(int $id)
   {
     try {
-    $response = $this->locationService->show($id);
+      $response = $this->locationService->show($id);
     } catch (ModelNotFoundException $e) {
       return response()->json(["error" => "invalid id"], 404);
     }
@@ -52,4 +53,11 @@ class LocationController extends BaseController
     return response()->json($response);
   }
 
+  // get all resource in storage or filter by it's name if the name is given.
+  public function index(LocationIndexRequest $request)
+  {
+    $response = $this->locationService->index($request->all());
+
+    return response()->json($response);
+  }
 }
