@@ -9,3 +9,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/locations', [LocationController::class, 'store']);
+Route::put('/locations/{id}', [LocationController::class, 'update']);

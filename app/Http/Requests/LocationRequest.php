@@ -6,12 +6,23 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class LocationStoreRequest extends FormRequest
+class LocationRequest extends FormRequest
 {
-  public function rules() {
+  public function rules()
+  {
     return [
       'name' => 'required|string',
-      'slug' => 'required|string',
+      'slug' => [
+        'required',
+        'string',
+        'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
+        // Uncomment the following lines if needed:
+        // function ($attribute, $value, $fail) {
+        //     if ($value !== Str::slug($this->input('name'))) {
+        //         $fail('The slug must correspond to the name.');
+        //     }
+        // }
+      ],
       'city' => 'required|string',
       'state' => 'required|string',
     ];

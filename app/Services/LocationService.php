@@ -15,4 +15,14 @@ class LocationService
 
     return $location;
   }
+
+  // update resource in storage
+  public function update(int $id, array $validatedData)
+  {
+    $location = Location::findOrFail($id);
+    $location->fill($validatedData);
+    $location->save();
+
+    return $location;
+  }
 }
